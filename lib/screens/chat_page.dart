@@ -12,6 +12,8 @@ class ChatPage extends StatelessWidget {
   CollectionReference messages =
       FirebaseFirestore.instance.collection(kMessagesCollection);
   final _controller = ScrollController();
+
+  ChatPage({super.key});
   @override
   Widget build(BuildContext context) {
     var email = ModalRoute.of(context)!.settings.arguments;
@@ -28,7 +30,7 @@ class ChatPage extends StatelessWidget {
               backgroundColor: kPrimaryColor,
               automaticallyImplyLeading: false,
               systemOverlayStyle:
-                  SystemUiOverlayStyle(statusBarColor: Colors.black),
+                  const SystemUiOverlayStyle(statusBarColor: Colors.black),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -80,9 +82,13 @@ class ChatPage extends StatelessWidget {
                       hintText: 'Send a message',
                       suffixIcon: IconButton(
                         onPressed: () {
+                          if (controller.text.isEmpty ||
+                              controller.text.trim().isEmpty) {
+                            return;
+                          }
                           messages.add(
                             {
-                              'message': controller.text,
+                              'message': controller.text.trim(),
                               kcreatedAt: DateTime.now(),
                               'id': email,
                             },

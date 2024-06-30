@@ -11,6 +11,7 @@ class Message {
     this.date,
   );
   factory Message.fromJson(jsonData) {
-    return Message(jsonData[kMessage], jsonData['id'], jsonData['createdAt']);
+    return Message(
+        jsonData[kMessage], jsonData['id'] ?? " ", jsonData['createdAt']);
   }
 }
