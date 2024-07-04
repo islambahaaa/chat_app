@@ -1,10 +1,10 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/cubit/login_cubit/login_cubit.dart';
+import 'package:chat_app/cubit/auth_cubit/auth_cubit.dart';
+import 'package:chat_app/cubit/chat_cubit/chat_cubit.dart';
 import 'package:chat_app/helpers/show_snack_bar.dart';
 import 'package:chat_app/screens/chat_page.dart';
 import 'package:chat_app/widgets/custom_button.dart';
 import 'package:chat_app/widgets/custom_text_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,11 +25,12 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
+    return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LoginLoading) {
           isLoading = true;
         } else if (state is LoginSuccess) {
+          BlocProvider.of<ChatCubit>(context).getMessages();
           Navigator.pushNamed(context, ChatPage.id, arguments: email);
           isLoading = false;
         } else if (state is LoginFailure) {
@@ -120,7 +121,7 @@ class LoginPage extends StatelessWidget {
                     CustomButton(
                       ontap: () async {
                         if (loginkey.currentState!.validate()) {
-                          BlocProvider.of<LoginCubit>(context)
+                          BlocProvider.of<AuthCubit>(context)
                               .loginUser(email: email!, password: password!);
                         } else {}
                       },
